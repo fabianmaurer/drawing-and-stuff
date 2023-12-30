@@ -88,7 +88,7 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                         if(density[x-offset+(y+offset)*width] > Math.max(0,maxValue - 1)) {
                             density[x-offset+(y+offset)*width]--;
                             lineLength++;
-                            if(lineLength >= fuzzy(maxLineLength, 0.2) / 2)
+                            if(lineLength >= fuzzy(maxLineLength, 0.5) / 2)
                                 break;
                         } else {
                             break;
@@ -105,12 +105,12 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                         }
                     }
                     const randomness = 1.0
-                    xoff = 1 + (-0.5 + 1.0 * Math.random()) * randomness
+                    xoff = 2 + (-0.5 + 1.0 * Math.random()) * randomness
                     yoff = 1 + (-0.5 + 1.0 * Math.random()) * randomness
-                    rx1 = x + xoff + 1 * Math.random()
-                    ry1 = y + yoff + 1 * Math.random()
-                    rx2 = x + xoff + 1 * Math.random()
-                    ry2 = y + yoff + 1 * Math.random()
+                    rx1 = x + xoff + 0.0 * Math.random()
+                    ry1 = y + yoff + 0.0 * Math.random()
+                    rx2 = x + xoff + 0.0 * Math.random()
+                    ry2 = y + yoff + 0.0 * Math.random()
                     await drawLine(ctx, scaling*(rx1+lineLength2), scaling*(ry1-lineLength2), scaling*(rx2-lineLength), scaling*(ry2+lineLength), timeperstep)
                     numlines++
                     document.querySelector('#status3').innerHTML = numlines
