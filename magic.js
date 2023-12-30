@@ -133,7 +133,7 @@ async function drawLine(ctx, startX, startY, endX, endY, delay) {
 }
 
 function getDensity(r,g,b,maxValue) {
-    return Math.floor((768-(r+g+b)) / (768/maxValue))
+    return Math.round((765-(r+g+b)) / (765/maxValue))
 }
 
 function timeout(ms) {
