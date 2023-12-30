@@ -23,9 +23,10 @@ function waitForImage() {
     }else{
         srcWidth = srcImg.width
         srcHeight = srcImg.height
-        let densityArray = getImageDensity(srcImg, maxValue)
-        
-        drawImage(canvas, densityArray, 'strokes', srcWidth, srcHeight, scalingFactor, 0, maxValue, maxLineLength)
+        setTimeout(() => {
+            let densityArray = getImageDensity(srcImg, maxValue)
+            drawImage(canvas, densityArray, 'strokes', srcWidth, srcHeight, scalingFactor, 0, maxValue, maxLineLength)
+        }, 200)
 
     }
 }
@@ -113,7 +114,7 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                     await drawLine(ctx, scaling*(rx1+lineLength2), scaling*(ry1-lineLength2), scaling*(rx2-lineLength), scaling*(ry2+lineLength), timeperstep)
                     numlines++
                     document.querySelector('#status3').innerHTML = numlines
-                    if(delayed && numlines % 50 == 0)
+                    if(delayed && numlines % 100 == 0)
                         await timeout(10)
                 }
             }
