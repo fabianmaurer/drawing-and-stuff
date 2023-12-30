@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+}
+.hidden {
+    display: none;
+}
+.status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgb(255 255 255 / 0.5);
+    border-bottom-right-radius: 8px;
+    padding: 8px;
+}
+.baseImage {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
