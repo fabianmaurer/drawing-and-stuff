@@ -8,7 +8,7 @@ let srcWidth;
 let srcHeight;
 let strokeOpacity = 0.3;
 const scalingFactor = 4;
-const normalize = true
+const normalize = false
 const delayed = true
 
 const canvas = document.querySelector('#main-canvas')
