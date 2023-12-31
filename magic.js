@@ -6,9 +6,9 @@ const maxValue = 16;
 const maxLineLength = 10;
 let srcWidth;
 let srcHeight;
-let strokeOpacity = 0.1;
+let strokeOpacity = 0.3;
 const scalingFactor = 4;
-const normalize = false
+const normalize = true
 const delayed = true
 
 const canvas = document.querySelector('#main-canvas')
@@ -45,16 +45,17 @@ function getImageDensity(img, maxValue) {
     ).data;
     
     let _densityArray = []
-    const normalizationFactor = 1
+    let normalizationFactor = 1
     if(normalize) {
         let totalDensity = 0
         for(let i=0; i<rgba.length; i=i+4) {
             totalDensity += Math.round(getDensity(rgba[i],rgba[i+1],rgba[i+2], maxValue))
         }
     
-        const targetAverage = maxValue / 2
+        const targetAverage = (maxValue) / 2
         let averageDensity = totalDensity / (rgba.length / targetAverage)
-        normalizationFactor = targetAverage / averageDensity
+        // clamp between 0.5 and 2
+        normalizationFactor = Math.max(Math.min(targetAverage / averageDensity, 2), 0.5)
     }
     for(let i=0; i<rgba.length; i=i+4) {
         _densityArray.push(Math.min(maxValue,Math.round(normalizationFactor * getDensity(rgba[i],rgba[i+1],rgba[i+2], maxValue))))
@@ -72,8 +73,7 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
     gradient.addColorStop(0.2, '#333')
     gradient.addColorStop(0.6, '#333')
     gradient.addColorStop(1, '#ccc')
-    ctx.strokeStyle = 'rgba(0,0,0,0.1)'
-    ctx.opacity = strokeOpacity
+    ctx.strokeStyle = 'rgba(0,0,0,'+strokeOpacity+')'
     ctx.lineWidth = 1
     let numlines = 0
     // find first pixel w/ max value
@@ -84,11 +84,12 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                     density[x+y*width]--
                     let lineLength = 1;
                     let lineLength2 = 0;
+                    const fuzzyMax = fuzzy(maxLineLength, 0.5)
                     for(let offset = 1; offset <= Math.min(x, height-y); offset++) {
                         if(density[x-offset+(y+offset)*width] > Math.max(0,maxValue - 1)) {
                             density[x-offset+(y+offset)*width]--;
                             lineLength++;
-                            if(lineLength >= fuzzy(maxLineLength, 0.5) / 2)
+                            if(lineLength >= fuzzyMax / 2)
                                 break;
                         } else {
                             break;
@@ -98,7 +99,7 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                         if(density[x+offset+(y-offset)*width] > Math.max(0,maxValue - 1)) {
                             density[x-offset+(y+offset)*width]--;
                             lineLength2++;
-                            if(lineLength2 >= fuzzy(maxLineLength, 0.2) / 2)
+                            if(lineLength2 >= fuzzyMax / 2)
                                 break;
                         } else {
                             break;
@@ -107,14 +108,14 @@ async function drawImage(canvas, density, method, width, height, scaling, timepe
                     const randomness = 1.0
                     xoff = 2 + (-0.5 + 1.0 * Math.random()) * randomness
                     yoff = 1 + (-0.5 + 1.0 * Math.random()) * randomness
-                    rx1 = x + xoff + 0.0 * Math.random()
-                    ry1 = y + yoff + 0.0 * Math.random()
-                    rx2 = x + xoff + 0.0 * Math.random()
-                    ry2 = y + yoff + 0.0 * Math.random()
+                    rx1 = x + xoff + 0.1 * Math.random()
+                    ry1 = y + yoff + 0.1 * Math.random()
+                    rx2 = x + xoff + 0.1 * Math.random()
+                    ry2 = y + yoff + 0.1 * Math.random()
                     await drawLine(ctx, scaling*(rx1+lineLength2), scaling*(ry1-lineLength2), scaling*(rx2-lineLength), scaling*(ry2+lineLength), timeperstep)
                     numlines++
                     document.querySelector('#status3').innerHTML = numlines
-                    if(delayed && numlines % 100 == 0)
+                    if(delayed && numlines % 500 == 0)
                         await timeout(10)
                 }
             }
@@ -133,7 +134,7 @@ async function drawLine(ctx, startX, startY, endX, endY, delay) {
 }
 
 function getDensity(r,g,b,maxValue) {
-    return Math.round((765-(r+g+b)) / (765/maxValue))
+    return Math.round((255-(0.2126*r + 0.7152*g + 0.0722*b)) / (255/maxValue))
 }
 
 function timeout(ms) {
