@@ -2,11 +2,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <img class="baseImage" src="https://picsum.photos/400/200" id="portrait">
+    <div class="baseImage">
+        <img src="https://picsum.photos/400/200" id="portrait">
+    </div>
     <div class="status">
-        <span id="status3"></span> strokes
-        <br>
+        <div><span id="status3"></span> strokes</div>
         <a href=".">try a different image</a>
+        <span class="switch-container">
+            <input type="checkbox" id="methodswitch">
+            <div>strokes</div>
+            <div>dots</div>
+        </span>
     </div>
     <div class="canvas-container">
         <canvas id="main-canvas"></canvas>
